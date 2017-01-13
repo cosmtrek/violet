@@ -11,11 +11,13 @@ const (
 	stopwords = "!@#$%^&*()_+=-`~,./<>?;':\"[]{}，。！￥……（）·；：「」『』、？《》】【“”|\\的 "
 )
 
+// Analyzer is used to segment words
 type Analyzer struct {
 	segmenter sego.Segmenter
-	stopword map[string]bool
+	stopword  map[string]bool
 }
 
+// New initializes analyzer
 func New() (*Analyzer, error) {
 	var analyzer Analyzer
 	wd, err := os.Getwd()
@@ -35,6 +37,7 @@ func New() (*Analyzer, error) {
 	return &analyzer, nil
 }
 
+// Analyze return valid words that not contains stop words
 func (a *Analyzer) Analyze(text string) []string {
 	if text == "" {
 		return []string{}
