@@ -8,3 +8,6 @@ check:
 	@goimports -w .
 	@echo "2. lint go code"
 	@golint ./...
+
+test:
+	go test -v ./pkg/...
