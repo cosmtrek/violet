@@ -7,6 +7,8 @@ import (
 	"syscall"
 	"unsafe"
 
+	"fmt"
+
 	"github.com/pkg/errors"
 )
 
@@ -23,8 +25,10 @@ type Mmap struct {
 const preAllocatedSpace int64 = 1024 * 1024
 
 const (
-	modeAppend = iota
-	modeCreate
+	// ModeAppend is append mode for mmap
+	ModeAppend = iota
+	// ModeCreate is create mode for mmap
+	ModeCreate
 )
 
 // NewMmap initializes mmap struct
@@ -36,20 +40,20 @@ func NewMmap(filename string, mode int) (*Mmap, error) {
 
 	fileMode := os.O_RDWR
 	fileCreateMode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
-	if mode == modeCreate {
+	if mode == ModeCreate {
 		fileMode = fileCreateMode
 	}
 	file, err := os.OpenFile(filename, fileMode, 0664)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	fileInfo, err := file.Stat()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	m.FileLen = fileInfo.Size()
-	if mode == modeCreate || m.FileLen == 0 {
+	if mode == ModeCreate || m.FileLen == 0 {
 		syscall.Ftruncate(int(file.Fd()), m.FileLen+preAllocatedSpace)
 		m.FileLen = m.FileLen + preAllocatedSpace
 	}
@@ -77,7 +81,7 @@ func (m *Mmap) Unmap() error {
 func (m *Mmap) Sync() error {
 	h := m.header()
 	_, _, err := syscall.Syscall(syscall.SYS_MSYNC, h.Data, uintptr(h.Len), syscall.MS_SYNC)
-	if err != nil {
+	if err != 0 {
 		return errors.Wrap(err, "sync error")
 	}
 	return nil
@@ -105,7 +109,7 @@ func (m *Mmap) AppendBytes(val []byte) uint64 {
 		return 0
 	}
 
-	dst := m.MmapBytes[m.FilePointer : m.FileHandler+valLen]
+	dst := m.MmapBytes[m.FilePointer : m.FilePointer+valLen]
 	copy(dst, val)
 	m.FilePointer += valLen
 	return offset
@@ -145,7 +149,7 @@ func (m *Mmap) AppendInt64(val int64) error {
 
 // ReadUint64 reads uint64 number
 func (m *Mmap) ReadUint64(start uint64) uint64 {
-	return int64(binary.LittleEndian.Uint64(m.MmapBytes[start : start+8]))
+	return binary.LittleEndian.Uint64(m.MmapBytes[start : start+8])
 }
 
 // WriteUint64 writes uint64 number into file
@@ -164,6 +168,12 @@ func (m *Mmap) AppendUint64(val uint64) error {
 	return nil
 }
 
+// ReadStringWithLen returns string
+func (m *Mmap) ReadStringWithLen(start uint64) string {
+	valLen := m.ReadInt64(int64(start))
+	return m.readString(int64(start+8), valLen)
+}
+
 func (m *Mmap) readString(start, valLen int64) string {
 	return string(m.MmapBytes[start : start+valLen])
 }
@@ -175,7 +185,7 @@ func (m *Mmap) appendString(val string) error {
 	}
 	dst := m.MmapBytes[m.FilePointer : m.FilePointer+valLen]
 	copy(dst, []byte(val))
-	m.FileLen += valLen
+	m.FilePointer += valLen
 	return nil
 }
 
@@ -194,4 +204,8 @@ func (m *Mmap) checkFilePointerOutOfRange(valLen int64) error {
 		}
 	}
 	return nil
+}
+
+func (m *Mmap) string() string {
+	return fmt.Sprintf("name: %s, len: %d, ptr: %d, type: %d", m.FileName, m.FileLen, m.FilePointer, m.MapType)
 }
