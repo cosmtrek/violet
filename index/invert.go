@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 	"sort"
 	"strings"
 	"sync"
-	"reflect"
 	"unsafe"
 
 	"github.com/cosmtrek/violet/pkg/analyzer"
@@ -204,36 +204,39 @@ func (v *Invert) reduceRoutine(file string, tableChans *[]chan tmpMergeTable) er
 				} else {
 					closeFlag[i] = true
 				}
-
-				if !closeFlag[i] {
-					if nextMax <= tables[i].Term {
-						nextMax = tables[i].Term
-					}
-					closeNum++
+			}
+			if !closeFlag[i] {
+				if nextMax <= tables[i].Term {
+					nextMax = tables[i].Term
 				}
+				closeNum++
 			}
-			sort.Sort(DocSort(restable.Docs))
-			docsLen := uint64(len(restable.Docs))
-			lenBuf := make([]byte, 0)
-			binary.LittleEndian.PutUint64(lenBuf, docsLen)
-			idxFd.Write(lenBuf)
-
-			buf := new(bytes.Buffer)
-			if err = binary.Write(buf, binary.LittleEndian, restable.Docs); err != nil {
-				return err
-			}
-			idxFd.Write(buf.Bytes())
-			v.terms.Push(restable.Term, uint64(offsetTotal))
-			offsetTotal = offsetTotal + uint64(8) + docsLen * 8
-			if closeNum == 0 {
-				break
-			}
-			maxTerm = nextMax
-			nextMax = ""
 		}
-		v.terms.Save(dicfile)
-		return nil
+		sort.Sort(DocSort(restable.Docs))
+		docsLen := uint64(len(restable.Docs))
+		lenBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(lenBuf, docsLen)
+		idxFd.Write(lenBuf)
+
+		buf := new(bytes.Buffer)
+		if err = binary.Write(buf, binary.LittleEndian, restable.Docs); err != nil {
+			return err
+		}
+		idxFd.Write(buf.Bytes())
+		v.terms.Push(restable.Term, uint64(offsetTotal))
+		offsetTotal = offsetTotal + uint64(8) + docsLen*8
+		if closeNum == 0 {
+			break
+		}
+		maxTerm = nextMax
+		nextMax = ""
 	}
+	v.terms.Save(dicfile)
+	return v.reloadIvtFileAfterMerge(dicfile)
+}
+
+func (v *Invert) reloadIvtFileAfterMerge(filename string) error {
+	return v.terms.Load(filename)
 }
 
 func (v *Invert) searchTerm(term string) ([]Doc, bool) {

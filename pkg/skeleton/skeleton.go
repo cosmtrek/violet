@@ -7,4 +7,5 @@ type KV interface {
 	Push(key string, value uint64) error
 	Load(filename string) error
 	Save(filename string) error
+	String() string
 }

@@ -3,6 +3,7 @@ package skeleton
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"os"
 	"sync"
 
@@ -61,6 +62,10 @@ func newEntry(h0, ha, hb, val uint64) entry {
 		HashB: hb,
 		Value: val,
 	}
+}
+
+func (h *HashMap) String() string {
+	return fmt.Sprintf("hashmap, buckets: %v, length: %v, available: %v", h.buckets, h.length, h.available)
 }
 
 // Load reads data from a file and stores it into hashmap
