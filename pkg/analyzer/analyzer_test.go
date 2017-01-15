@@ -7,11 +7,15 @@ import (
 )
 
 func TestAnalyze(t *testing.T) {
-	analyzer, err := New()
-	assert.NotNil(t, analyzer)
+	segmenter, err := New()
+	assert.NotNil(t, segmenter)
 	assert.Nil(t, err)
 
-	segments := analyzer.Analyze("violet is a search engine in go!")
-	expected := []string{"violet", "is", "a", "search", "engine", "in", "go"}
-	assert.Equal(t, expected, segments)
+	terms := segmenter.Analyze("violet is a search engine in go!", false)
+	expected1 := []string{"violet", "is", "a", "search", "engine", "in", "go"}
+	assert.Equal(t, expected1, terms)
+
+	termsWithSearch := segmenter.Analyze("violet is a search engine in go!", true)
+	expected2 := []string{"violet", "is", "a", "search", "engine", "in", "go"}
+	assert.Equal(t, expected2, termsWithSearch)
 }

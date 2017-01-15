@@ -2,12 +2,11 @@ package io
 
 import (
 	"encoding/binary"
+	"fmt"
 	"os"
 	"reflect"
 	"syscall"
 	"unsafe"
-
-	"fmt"
 
 	"github.com/pkg/errors"
 )
