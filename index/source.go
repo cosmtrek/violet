@@ -100,3 +100,18 @@ func (s *Source) getDetail(docid uint64) interface{} {
 	}
 	return offset
 }
+
+func (s *Source) sync() error {
+	var err error
+	if s.fieldType == TString || s.fieldType == TStore {
+		if err = s.detail.Sync(); err != nil {
+			return err
+		}
+	}
+	return s.handler.Sync()
+}
+
+func (s *Source) string() string {
+	return fmt.Sprintf("[SOURCE] maxdocid: %d, filepath: %s, field: %s, fieldType: %d, handler: %s, detail: %s",
+		s.maxDocID, s.filepath, s.field, s.fieldType, s.handler.String(), s.detail.String())
+}

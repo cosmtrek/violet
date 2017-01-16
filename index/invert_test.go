@@ -1,27 +1,23 @@
 package index
 
 import (
-	"os"
 	"testing"
 
-	"github.com/cosmtrek/violet/pkg/analyzer"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewInvert(t *testing.T) {
-	dir := os.TempDir()
-	segmenter, err := analyzer.New()
+	path, err := tempDir("", true)
 	assert.Nil(t, err)
-	invert, err := NewInvert(dir, "field", TString, segmenter)
+	invert, err := NewInvert(path, "field0", TString, segmenter())
 	assert.Nil(t, err)
 	assert.NotNil(t, invert)
 }
 
-func Test_searchTerm(t *testing.T) {
-	dir := os.TempDir()
-	segmenter, err := analyzer.New()
+func TestInvert_addDocument_saveTmpInvert_mergeTmpInvert_searchTerm(t *testing.T) {
+	path, err := tempDir("", true)
 	assert.Nil(t, err)
-	invert, err := NewInvert(dir, "field", TString, segmenter)
+	invert, err := NewInvert(path, "field1", TString, segmenter())
 	assert.Nil(t, err)
 	assert.NotNil(t, invert)
 	invert.addDocument(uint64(0), "浓烟下的诗歌电台 陈鸿宇 理想三旬")

@@ -20,6 +20,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	// InvertSyncInterval save invert files at intervals
+	InvertSyncInterval = 100000
+)
+
 // Invert is the core of search engine
 type Invert struct {
 	curDocID   uint64
@@ -51,12 +56,18 @@ func NewInvert(filepath string, field string, fieldtype uint64, segmenter analyz
 	var err error
 	idxfile := idxFile(filepath, field)
 	dicfile := dicFile(filepath, field)
+	ivt.terms = skeleton.NewHashMap()
 	if utils.FileExists(idxfile) && utils.FileExists(dicfile) {
-		ivt.terms = skeleton.NewHashMap()
 		if err = ivt.terms.Load(idxfile); err != nil {
 			return nil, errors.Wrap(err, "failed to load idx file")
 		}
 		idx, err := io.NewMmap(idxfile, io.ModeAppend)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to mmap idx file")
+		}
+		ivt.idx = idx
+	} else {
+		idx, err := io.NewMmap(idxfile, io.ModeCreate)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to mmap idx file")
 		}
@@ -257,16 +268,19 @@ type tmpIvt struct {
 	DocID uint64 `json:"docid"`
 }
 
+// TmpIvtTermSort sorts tmpIvt array
 type TmpIvtTermSort []tmpIvt
 
 func (t TmpIvtTermSort) Len() int           { return len(t) }
 func (t TmpIvtTermSort) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
 func (t TmpIvtTermSort) Less(i, j int) bool { return t[i].Term > t[j].Term }
 
+// Doc means docid
 type Doc struct {
 	DocID uint64 `json:"docid`
 }
 
+// DocSort sorts doc array
 type DocSort []Doc
 
 func (d DocSort) Len() int           { return len(d) }
@@ -291,4 +305,9 @@ func readDocIDs(m *io.Mmap, start uint64, idsLen uint64) []Doc {
 		Len:  int(idsLen),
 		Cap:  int(idsLen),
 	}))
+}
+
+func (v *Invert) string() string {
+	return fmt.Sprintf("[INVERT] field: %s, fieldType: %d, filepath: %s, idx: %s, segmentNum: %d",
+		v.field, v.fieldType, v.filepath, v.idx.String(), v.segmentNum)
 }

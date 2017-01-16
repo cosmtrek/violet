@@ -205,6 +205,6 @@ func (m *Mmap) checkFilePointerOutOfRange(valLen int64) error {
 	return nil
 }
 
-func (m *Mmap) string() string {
-	return fmt.Sprintf("name: %s, len: %d, ptr: %d, type: %d", m.FileName, m.FileLen, m.FilePointer, m.MapType)
+func (m *Mmap) String() string {
+	return fmt.Sprintf("mmap - name: %s, len: %d, ptr: %d, type: %d", m.FileName, m.FileLen, m.FilePointer, m.MapType)
 }
