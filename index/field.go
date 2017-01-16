@@ -27,7 +27,7 @@ func NewField(name string, ftype uint64, path string, segmenter analyzer.Analyze
 		Path: path,
 	}
 	var err error
-	metafile := metaFile(path, name)
+	metafile := fieldMetaFile(path, name)
 	if utils.FileExists(metafile) {
 		meta, err := utils.ReadJSON(metafile)
 		if err != nil {
@@ -111,14 +111,14 @@ func (f *Field) syncToDisk() error {
 			return errors.Wrap(err, "failed to sync source file to disk")
 		}
 	}
-	file := metaFile(f.Path, f.Name)
+	file := fieldMetaFile(f.Path, f.Name)
 	if err = utils.WriteJSON(file, f); err != nil {
 		return errors.Wrap(err, "failed to write field into json")
 	}
 	return nil
 }
 
-func metaFile(filepath, field string) string {
+func fieldMetaFile(filepath, field string) string {
 	return fmt.Sprintf("%v%v.json", filepath, field)
 }
 

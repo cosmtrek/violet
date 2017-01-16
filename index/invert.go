@@ -111,7 +111,7 @@ func (v *Invert) saveTmpInvert() error {
 }
 
 func (v *Invert) mergeTmpInvert() error {
-	tableChans := make([]chan tmpMergeTable, 0)
+	var tableChans []chan tmpMergeTable
 	for i := uint64(0); i < v.segmentNum; i++ {
 		file := ivtFile(v.filepath, v.field, i)
 		tableChans = append(tableChans, make(chan tmpMergeTable))
@@ -182,7 +182,7 @@ func (v *Invert) reduceRoutine(file string, tableChans *[]chan tmpMergeTable) er
 
 	tableLens := len(*tableChans)
 	closeFlag := make([]bool, tableLens)
-	tables := make([]tmpMergeTable, 0)
+	var tables []tmpMergeTable
 	v.terms = skeleton.NewHashMap()
 	var maxTerm string
 	var offsetTotal uint64

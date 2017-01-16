@@ -1,10 +1,9 @@
 package utils
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
-
-	"k8s.io/kubernetes/pkg/util/json"
 )
 
 // FileExists checks if file exists
