@@ -8,22 +8,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-/*
 func TestNewInvert(t *testing.T) {
 	dir := os.TempDir()
-	analyzer, err := analyzer.New()
+	segmenter, err := analyzer.New()
 	assert.Nil(t, err)
-	invert, err := NewInvert(dir, "field", TString, analyzer)
+	invert, err := NewInvert(dir, "field", TString, segmenter)
 	assert.Nil(t, err)
 	assert.NotNil(t, invert)
 }
-*/
 
 func Test_searchTerm(t *testing.T) {
 	dir := os.TempDir()
-	analyzer, err := analyzer.New()
+	segmenter, err := analyzer.New()
 	assert.Nil(t, err)
-	invert, err := NewInvert(dir, "field", TString, analyzer)
+	invert, err := NewInvert(dir, "field", TString, segmenter)
 	assert.Nil(t, err)
 	assert.NotNil(t, invert)
 	invert.addDocument(uint64(0), "浓烟下的诗歌电台 陈鸿宇 理想三旬")
