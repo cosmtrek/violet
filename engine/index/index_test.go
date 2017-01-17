@@ -1,9 +1,10 @@
 package index
 
 import (
-	"testing"
 	"strconv"
+	"testing"
 
+	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +15,7 @@ func TestNewIndex(t *testing.T) {
 }
 
 func TestIndex_IndexFields_AddDocument_Search_GetDocument(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	index, err := NewIndex(path, "violet", segmenter())
 	assert.Nil(t, err)

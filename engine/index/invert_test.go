@@ -3,11 +3,12 @@ package index
 import (
 	"testing"
 
+	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewInvert(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	invert, err := NewInvert(path, "field0", TString, segmenter())
 	assert.Nil(t, err)
@@ -15,7 +16,7 @@ func TestNewInvert(t *testing.T) {
 }
 
 func TestInvert_addDocument_saveTmpInvert_mergeTmpInvert_searchTerm(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	invert, err := NewInvert(path, "field1", TString, segmenter())
 	assert.Nil(t, err)

@@ -3,11 +3,12 @@ package index
 import (
 	"testing"
 
+	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewField(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	field, err := NewField("fieldA", TString, path, segmenter())
 	assert.Nil(t, err)
@@ -15,7 +16,7 @@ func TestNewField(t *testing.T) {
 }
 
 func TestField_addDocument_searchTerm_getDetail(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	field, err := NewField("fieldB", TString, path, segmenter())
 	assert.Nil(t, err)

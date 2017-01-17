@@ -3,15 +3,16 @@ package index
 import (
 	"testing"
 
+	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_tempDir(t *testing.T) {
-	uniqueFile, err := tempDir("", true)
+	uniqueFile, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	assert.NotNil(t, uniqueFile)
 
-	file, err := tempDir("", false)
+	file, err := utils.TempDir("", false)
 	assert.Nil(t, err)
 	assert.NotNil(t, file)
 }

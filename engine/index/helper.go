@@ -1,10 +1,6 @@
 package index
 
 import (
-	"io/ioutil"
-	"os"
-
-	libgo "github.com/cosmtrek/libgo/utils"
 	"github.com/cosmtrek/violet/pkg/analyzer"
 )
 
@@ -18,20 +14,6 @@ func segmenter() *analyzer.Segmenter {
 		gsegmenter = segmenter
 	}
 	return gsegmenter
-}
-
-func tempDir(prefix string, random bool) (string, error) {
-	dir, err := ioutil.TempDir(os.TempDir(), prefix)
-	if err != nil {
-		return "", err
-	}
-	if random {
-		dir, err = ioutil.TempDir(os.TempDir(), prefix+libgo.RandomString(20))
-		if err != nil {
-			return "", err
-		}
-	}
-	return dir, nil
 }
 
 // MergeDocIDs merges docs in non-decreasing order

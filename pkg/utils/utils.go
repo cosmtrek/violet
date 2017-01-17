@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+
+	libgo "github.com/cosmtrek/libgo/utils"
 )
 
 // FileExists checks if file exists
@@ -46,4 +48,19 @@ func WriteJSON(file string, data interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// TempDir returns temp directory path
+func TempDir(prefix string, random bool) (string, error) {
+	dir, err := ioutil.TempDir(os.TempDir(), prefix)
+	if err != nil {
+		return "", err
+	}
+	if random {
+		dir, err = ioutil.TempDir(os.TempDir(), prefix+libgo.RandomString(20))
+		if err != nil {
+			return "", err
+		}
+	}
+	return dir, nil
 }

@@ -1,12 +1,12 @@
 package index
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
 	"github.com/cosmtrek/violet/pkg/analyzer"
 	"github.com/cosmtrek/violet/pkg/utils"
-	"github.com/kurrik/json"
 	"github.com/pkg/errors"
 )
 

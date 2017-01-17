@@ -3,13 +3,13 @@ package index
 const (
 	// EQUAL =
 	EQUAL = iota
-	// Less <
+	// LESS <
 	LESS
 	// GREATER >
 	GREATER
 )
 
-// Filter
+// Filter on fields
 type Filter struct {
 	Field string
 	Value uint64

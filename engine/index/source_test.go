@@ -3,12 +3,13 @@ package index
 import (
 	"testing"
 
+	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewSource(t *testing.T) {
 	var err error
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	_, err = NewSource(path, "field1", TString)
 	assert.Nil(t, err)
@@ -19,7 +20,7 @@ func TestNewSource(t *testing.T) {
 }
 
 func TestSource_addDocument(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	s, err := NewSource(path, "field1", TString)
 	assert.Nil(t, err)
@@ -28,7 +29,7 @@ func TestSource_addDocument(t *testing.T) {
 }
 
 func TestSource_getDetail(t *testing.T) {
-	path, err := tempDir("", true)
+	path, err := utils.TempDir("", true)
 	assert.Nil(t, err)
 	s1, err := NewSource(path, "field1", TString)
 	assert.Nil(t, err)
