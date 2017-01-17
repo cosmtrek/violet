@@ -98,7 +98,7 @@ func (x *Index) AddDocument(doc map[string]string) error {
 }
 
 // Search query and returns docs
-func (x *Index) Search(query string) ([]Doc, bool) {
+func (x *Index) Search(query string, filters []Filter) ([]Doc, bool) {
 	terms := x.Segmenter.Analyze(query, false)
 	var docs []Doc
 	first := true
@@ -120,12 +120,24 @@ func (x *Index) Search(query string) ([]Doc, bool) {
 		}
 	}
 
-	// TODO filter docs
+	var fdocs []Doc
+	for _, doc := range docs {
+		filtered := false
+		for _, f := range filters {
+			if !x.Fields[f.Field].filter(doc.DocID, f.Value, f.Ftype) {
+				filtered = true
+				break
+			}
+		}
+		if !filtered {
+			fdocs = append(fdocs, doc)
+		}
+	}
 
-	if len(docs) == 0 {
+	if len(fdocs) == 0 {
 		return nil, false
 	}
-	return docs, true
+	return fdocs, true
 }
 
 // SearchTerm returns docs that contains term

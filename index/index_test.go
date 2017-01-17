@@ -2,7 +2,6 @@ package index
 
 import (
 	"testing"
-
 	"strconv"
 
 	"github.com/stretchr/testify/assert"
@@ -73,8 +72,16 @@ func TestIndex_IndexFields_AddDocument_Search_GetDocument(t *testing.T) {
 	}
 	err = index.SyncToDisk()
 	assert.Nil(t, err)
-	docs, found := index.Search("我们之间留了太多空白格")
-	assert.True(t, found)
-	expected := []Doc{{DocID: 9}, {DocID: 23}, {DocID: 31}}
-	assert.EqualValues(t, expected, docs)
+	filters1 := []Filter{
+		{Field: "b", Value: uint64(10), Ftype: GREATER},
+	}
+	docs1, found1 := index.Search("我们之间留了太多空白格", filters1)
+	assert.True(t, found1)
+	expected1 := []Doc{{DocID: 9}, {DocID: 23}, {DocID: 31}}
+	assert.EqualValues(t, expected1, docs1)
+	filters2 := []Filter{
+		{Field: "b", Value: uint64(15), Ftype: GREATER},
+	}
+	_, found2 := index.Search("我们之间留了太多空白格", filters2)
+	assert.False(t, found2)
 }

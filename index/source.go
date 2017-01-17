@@ -101,6 +101,24 @@ func (s *Source) getDetail(docid uint64) interface{} {
 	return offset
 }
 
+// filter compares document's field value to user's
+func (s *Source) filter(docid, value, ftype uint64) bool {
+	if s.handler == nil {
+		return false
+	}
+	docVal := s.handler.ReadUint64(docid * 8)
+	switch ftype {
+	case EQUAL:
+		return docVal == value
+	case LESS:
+		return docVal < value
+	case GREATER:
+		return docVal > value
+	default:
+		return false
+	}
+}
+
 func (s *Source) sync() error {
 	var err error
 	if s.fieldType == TString || s.fieldType == TStore {

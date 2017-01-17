@@ -96,6 +96,14 @@ func (f *Field) searchTerm(term string) ([]Doc, bool) {
 	return nil, false
 }
 
+func (f *Field) filter(docid, value, ftype uint64) bool {
+	// current only support number type
+	if f.source == nil || f.Type != TNumber {
+		return false
+	}
+	return f.source.filter(docid, value, ftype)
+}
+
 func (f *Field) syncToDisk() error {
 	var err error
 	if f.invert != nil {
