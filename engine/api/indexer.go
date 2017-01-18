@@ -76,7 +76,10 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 	for scanner.Scan() {
 		if fieldType == "text" {
 			txt := scanner.Text()
-			txts := strings.Split(txt, "\t")
+			if txt == "" {
+				continue
+			}
+			txts := strings.Split(txt, "  ")
 			txtLen := len(txts)
 			// map txts to fields
 			for i, f := range fields {
@@ -92,4 +95,23 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 		}
 	}
 	return r.Indexes[index].SyncToDisk()
+}
+
+// Search searches everything
+func (r *Indexer) Search(index string, query string, fileters []index.Filter) ([]map[string]string, bool) {
+	docs, found := r.Indexes[index].Search(query, fileters)
+	if !found {
+		return nil, false
+	}
+	var results []map[string]string
+	for _, doc := range docs {
+		d, ok := r.Indexes[index].GetDocument(doc.DocID)
+		if ok {
+			results = append(results, d)
+		}
+	}
+	if len(results) == 0 {
+		return nil, false
+	}
+	return results, true
 }

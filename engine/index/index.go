@@ -21,9 +21,9 @@ const (
 
 // Index is the entry to all low level data structures
 type Index struct {
-	Name      string `json:"index"`
-	MaxDocID  uint64 `json:"maxdocid"`
-	Path      string
+	Name      string            `json:"index"`
+	MaxDocID  uint64            `json:"maxdocid"`
+	Path      string            `json:"path"`
 	FieldMeta map[string]uint64 `json:"fields"`
 	Fields    map[string]*Field
 	Segmenter analyzer.Analyzer
@@ -154,7 +154,7 @@ func (x *Index) GetDocument(docid uint64) (map[string]string, bool) {
 	if docid > x.MaxDocID {
 		return nil, false
 	}
-	var doc map[string]string
+	doc := make(map[string]string)
 	for fname, field := range x.Fields {
 		v, _, ok, err := field.getDetail(docid)
 		if err != nil {
