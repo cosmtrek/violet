@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"flag"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -15,7 +17,7 @@ var (
 	index     string
 	fields    string
 	dataFile  string
-	query     string
+	query     bool
 )
 
 func main() {
@@ -25,7 +27,7 @@ func main() {
 	flag.StringVar(&index, "index", "violet", "a string")
 	flag.StringVar(&fields, "fields", "", "field1-type,field2-type,field3-type")
 	flag.StringVar(&dataFile, "data", "", "path")
-	flag.StringVar(&query, "query", "", "term;date>10|len>2")
+	flag.BoolVar(&query, "query", false, "term;date>10|len>2")
 	flag.Parse()
 
 	if indexPath == "" {
@@ -65,10 +67,28 @@ func main() {
 		os.Exit(1)
 	}
 	log.Println("load data from file successfully!")
-	docs, ok := indexer.Search(index, query, nil)
-	if ok {
-		log.Println(docs)
-	} else {
-		log.Println("no result")
+
+	if query {
+		input := bufio.NewScanner(os.Stdin)
+		fmt.Println("> Enter query:")
+		var term string
+		for input.Scan() {
+			term = input.Text()
+			if term == "q" || term == "quit" {
+				break
+			}
+			// TODO add filters
+			docs, ok := indexer.Search(index, term, nil)
+			fmt.Println("- results ")
+			if ok {
+				for i, d := range docs {
+					fmt.Printf("%d, %s at %s\n", i, d["tweet"], d["date"])
+				}
+			} else {
+				fmt.Println("no result")
+			}
+			fmt.Println("> Enter query:")
+		}
+		log.Println("goodbye, my friend~")
 	}
 }

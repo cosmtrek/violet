@@ -2,6 +2,7 @@ package api
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 
@@ -89,6 +90,7 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 					doc[f] = txts[i]
 				}
 			}
+			fmt.Println(doc)
 			if err = r.Indexes[index].AddDocument(doc); err != nil {
 				return errors.Wrap(err, "failed to add document into indexer")
 			}
