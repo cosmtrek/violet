@@ -3,6 +3,7 @@ package index
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/cosmtrek/violet/pkg/analyzer"
@@ -173,6 +174,7 @@ func (x *Index) GetDocument(docid uint64) (map[string]string, bool) {
 			doc[fname] = ""
 		}
 	}
+	doc["docid"] = strconv.Itoa(int(docid))
 	return doc, true
 }
 

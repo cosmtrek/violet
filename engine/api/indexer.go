@@ -24,6 +24,7 @@ func NewIndexer(path string, segmenter analyzer.Analyzer) (*Indexer, error) {
 		Indexes: make(map[string]*index.Index),
 		Path:    path,
 	}
+	var err error
 	if segmenter == nil {
 		seg, err := analyzer.New()
 		if err != nil {
@@ -31,7 +32,6 @@ func NewIndexer(path string, segmenter analyzer.Analyzer) (*Indexer, error) {
 		}
 		indexer.Segmenter = seg
 	}
-	var err error
 	if path == "/" || path == "./" {
 		return nil, errors.New("indexer path error")
 	}

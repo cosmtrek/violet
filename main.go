@@ -4,20 +4,26 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/cosmtrek/violet/engine/api"
+	"github.com/pressly/chi"
 )
 
 var (
-	indexPath string
-	index     string
-	fields    string
-	dataFile  string
-	query     bool
+	indexPath  string
+	index      string
+	fields     string
+	dataFile   string
+	query      bool
+	serverMode bool
+	serverPort string
+
+	handler *api.Handler
 )
 
 func main() {
@@ -28,8 +34,23 @@ func main() {
 	flag.StringVar(&fields, "fields", "", "field1-type,field2-type,field3-type")
 	flag.StringVar(&dataFile, "data", "", "path")
 	flag.BoolVar(&query, "query", false, "term;date>10|len>2")
+	flag.BoolVar(&serverMode, "server", true, "server mode")
+	flag.StringVar(&serverPort, "port", "6000", "server port")
 	flag.Parse()
 
+	var err error
+	handler = new(api.Handler)
+	if serverMode {
+		r := chi.NewRouter()
+		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("ok"))
+		})
+		r.Post("/index", handler.IndexHandler)
+		r.Get("/:indexer/search", handler.SearchHandler)
+		log.Fatal(http.ListenAndServe(":"+serverPort, r))
+	}
+
+	indexer := handler.Indexer
 	if indexPath == "" {
 		log.Errorln("must set index path")
 		os.Exit(1)
@@ -43,8 +64,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	var indexer *api.Indexer
-	var err error
 	fieldsMeta := make(map[string]uint64, 0)
 	var fieldsArr []string
 	for _, f := range strings.Split(fields, ",") {
@@ -79,7 +98,7 @@ func main() {
 			}
 			// TODO add filters
 			docs, ok := indexer.Search(index, term, nil)
-			fmt.Println("- results ")
+			fmt.Println("~ results ")
 			if ok {
 				for i, d := range docs {
 					fmt.Printf("%d, %s at %s\n", i, d["tweet"], d["date"])
