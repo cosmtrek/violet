@@ -120,24 +120,31 @@ func (x *Index) Search(query string, filters []Filter) ([]Doc, bool) {
 		}
 	}
 
-	var fdocs []Doc
-	for _, doc := range docs {
-		filtered := false
-		for _, f := range filters {
-			if !x.Fields[f.Field].filter(doc.DocID, f.Value, f.Ftype) {
-				filtered = true
-				break
+	// filter doc ids
+	if len(filters) > 0 {
+		var fdocs []Doc
+		for _, doc := range docs {
+			filtered := false
+			for _, f := range filters {
+				if !x.Fields[f.Field].filter(doc.DocID, f.Value, f.Ftype) {
+					filtered = true
+					break
+				}
+			}
+			if !filtered {
+				fdocs = append(fdocs, doc)
 			}
 		}
-		if !filtered {
-			fdocs = append(fdocs, doc)
+		if len(fdocs) == 0 {
+			return nil, false
 		}
+		return fdocs, true
 	}
 
-	if len(fdocs) == 0 {
+	if len(docs) == 0 {
 		return nil, false
 	}
-	return fdocs, true
+	return docs, true
 }
 
 // SearchTerm returns docs that contains term

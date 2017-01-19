@@ -2,7 +2,6 @@ package api
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
@@ -90,7 +89,6 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 					doc[f] = txts[i]
 				}
 			}
-			fmt.Println(doc)
 			if err = r.Indexes[index].AddDocument(doc); err != nil {
 				return errors.Wrap(err, "failed to add document into indexer")
 			}
@@ -100,8 +98,8 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 }
 
 // Search searches everything
-func (r *Indexer) Search(index string, query string, fileters []index.Filter) ([]map[string]string, bool) {
-	docs, found := r.Indexes[index].Search(query, fileters)
+func (r *Indexer) Search(index string, query string, filters []index.Filter) ([]map[string]string, bool) {
+	docs, found := r.Indexes[index].Search(query, filters)
 	if !found {
 		return nil, false
 	}

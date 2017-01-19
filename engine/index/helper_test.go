@@ -21,11 +21,15 @@ func TestMergeDocIDs(t *testing.T) {
 	a := []Doc{
 		{DocID: 0},
 		{DocID: 1},
+		{DocID: 2},
 		{DocID: 3},
 		{DocID: 4},
+		{DocID: 5},
 	}
 	b := []Doc{
 		{DocID: 2},
+		{DocID: 4},
+		{DocID: 5},
 		{DocID: 6},
 		{DocID: 8},
 	}
@@ -35,6 +39,7 @@ func TestMergeDocIDs(t *testing.T) {
 		{DocID: 2},
 		{DocID: 3},
 		{DocID: 4},
+		{DocID: 5},
 		{DocID: 6},
 		{DocID: 8},
 	}

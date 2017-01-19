@@ -82,7 +82,17 @@ func (v *Invert) addDocument(docid uint64, content string) error {
 	for _, term := range terms {
 		t := strings.TrimSpace(term)
 		if len(t) > 0 {
-			v.tmpIvts = append(v.tmpIvts, tmpIvt{DocID: docid, Term: t})
+			// prevent duplicated tmpIvt
+			found := false
+			for _, e := range v.tmpIvts {
+				if e.Term == t && e.DocID == docid {
+					found = true
+					break
+				}
+			}
+			if !found {
+				v.tmpIvts = append(v.tmpIvts, tmpIvt{DocID: docid, Term: t})
+			}
 		}
 	}
 	return nil
