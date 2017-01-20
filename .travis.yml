@@ -3,5 +3,8 @@ language: go
 go:
   - 1.7
 
+env:
+  - violet=$HOME/gopath/src/github.com/cosmtrek/violet
+
 script:
   - make ci
