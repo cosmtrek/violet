@@ -4,6 +4,7 @@ setup:
 	go get -u github.com/golang/lint/golint
 	go get -u github.com/Sirupsen/logrus
 	go get -u github.com/pressly/chi
+	go get -u github.com/stretchr/testify
 
 check:
 	@echo "1. formating code"
