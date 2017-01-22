@@ -98,8 +98,8 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 }
 
 // Search searches everything
-func (r *Indexer) Search(index string, query string, filters []index.Filter) ([]map[string]string, bool) {
-	docs, found := r.Indexes[index].Search(query, filters)
+func (r *Indexer) Search(index string, query string) ([]map[string]string, bool) {
+	docs, found := r.Indexes[index].Search(query)
 	if !found {
 		return nil, false
 	}

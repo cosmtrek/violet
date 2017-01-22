@@ -91,7 +91,7 @@ func (h *Handler) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	indexer := chi.URLParam(r, "indexer")
 	query := r.URL.Query().Get("query")
 
-	docs, ok := h.Indexer.Search(indexer, query, nil)
+	docs, ok := h.Indexer.Search(indexer, query)
 	if ok {
 		resp := Response{
 			Code:   "0",

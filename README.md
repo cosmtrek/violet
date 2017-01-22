@@ -40,3 +40,14 @@ curl -XPOST -d @./data/tweets.json "http://localhost:6000/index"
 # try to query
 curl "http://localhost:6000/INDEX_NAME/search?query=TERM"
 ```
+
+## Query
+
+In order to search with efficiency, it's necessary to query something with conditions. Currently only support following
+forms:
+
+1. `word` search single word
+2. `word1 word2` search multiple words
+3. `word1 -word2` search word1 and excludes word2
+4. `field1:word1 field2:word2` search word1 in field1 and word2 in field2
+5. `word field>10` search word and field(integer) is greater than 10

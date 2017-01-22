@@ -99,53 +99,12 @@ func (x *Index) AddDocument(doc map[string]string) error {
 }
 
 // Search query and returns docs
-func (x *Index) Search(query string, filters []Filter) ([]Doc, bool) {
-	terms := x.Segmenter.Analyze(query, false)
-	var docs []Doc
-	first := true
-	for _, term := range terms {
-		var subdocs []Doc
-		for k, v := range x.FieldMeta {
-			if v == TString {
-				fieldDocs, ok := x.SearchTerm(term, k)
-				if ok {
-					subdocs, _ = MergeDocIDs(subdocs, fieldDocs)
-				}
-			}
-		}
-		if first {
-			docs = subdocs
-			first = false
-		} else {
-			docs, _ = IntersectDocIDs(docs, subdocs)
-		}
-	}
-
-	// filter doc ids
-	if len(filters) > 0 {
-		var fdocs []Doc
-		for _, doc := range docs {
-			filtered := false
-			for _, f := range filters {
-				if !x.Fields[f.Field].filter(doc.DocID, f.Value, f.Ftype) {
-					filtered = true
-					break
-				}
-			}
-			if !filtered {
-				fdocs = append(fdocs, doc)
-			}
-		}
-		if len(fdocs) == 0 {
-			return nil, false
-		}
-		return fdocs, true
-	}
-
-	if len(docs) == 0 {
+func (x *Index) Search(query string) ([]Doc, bool) {
+	q, err := NewQuery(x, query)
+	if err != nil {
 		return nil, false
 	}
-	return docs, true
+	return q.do()
 }
 
 // SearchTerm returns docs that contains term

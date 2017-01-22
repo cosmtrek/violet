@@ -96,8 +96,7 @@ func main() {
 			if term == "q" || term == "quit" {
 				break
 			}
-			// TODO add filters
-			docs, ok := indexer.Search(index, term, nil)
+			docs, ok := indexer.Search(index, term)
 			fmt.Println("~ results ")
 			if ok {
 				for i, d := range docs {

@@ -70,3 +70,26 @@ func TestIntersectDocIDs(t *testing.T) {
 	assert.True(t, found)
 	assert.EqualValues(t, expected, actual)
 }
+
+func TestExcludeDocIDs(t *testing.T) {
+	a := []Doc{
+		{DocID: 2},
+		{DocID: 3},
+		{DocID: 4},
+		{DocID: 6},
+		{DocID: 7},
+	}
+	b := []Doc{
+		{DocID: 0},
+		{DocID: 2},
+	}
+	expected := []Doc{
+		{DocID: 3},
+		{DocID: 4},
+		{DocID: 6},
+		{DocID: 7},
+	}
+	actual, found := ExcludeDocIDs(a, b)
+	assert.True(t, found)
+	assert.EqualValues(t, expected, actual)
+}

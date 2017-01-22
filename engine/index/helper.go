@@ -1,11 +1,17 @@
 package index
 
 import (
+	"regexp"
+
 	"github.com/cosmtrek/violet/pkg/analyzer"
 )
 
 var (
 	gsegmenter *analyzer.Segmenter
+)
+
+const (
+	reCompare = "[a-zA-Z]+([<|=|>])[0-9]+"
 )
 
 func segmenter() *analyzer.Segmenter {
@@ -93,4 +99,50 @@ func IntersectDocIDs(a []Doc, b []Doc) ([]Doc, bool) {
 		}
 	}
 	return c[:k], true
+}
+
+// ExcludeDocIDs removes ids that found in b docs
+func ExcludeDocIDs(a []Doc, b []Doc) ([]Doc, bool) {
+	aLen := len(a)
+	bLen := len(b)
+	if aLen == 0 {
+		return nil, false
+	}
+
+	var i, j, k int
+	c := make([]Doc, aLen)
+	for i < aLen && j < bLen {
+		if a[i].DocID == b[j].DocID {
+			i++
+			j++
+			continue
+		}
+		if a[i].DocID < b[j].DocID {
+			c[k] = a[i]
+			i++
+			k++
+		} else {
+			j++
+		}
+	}
+	if i < aLen {
+		for i < aLen {
+			c[k] = a[i]
+			k++
+			i++
+		}
+	}
+	return c[:k], true
+}
+
+// HasCompare checks if the string contains '<', '=' or '>'
+func HasCompare(text string) (string, bool) {
+	if text == "" {
+		return "", false
+	}
+	re := regexp.MustCompile(reCompare)
+	if re.MatchString(text) {
+		return re.FindStringSubmatch(text)[1], true
+	}
+	return "", false
 }

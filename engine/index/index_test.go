@@ -73,16 +73,10 @@ func TestIndex_IndexFields_AddDocument_Search_GetDocument(t *testing.T) {
 	}
 	err = index.SyncToDisk()
 	assert.Nil(t, err)
-	filters1 := []Filter{
-		{Field: "b", Value: uint64(10), Ftype: GREATER},
-	}
-	docs1, found1 := index.Search("我们之间留了太多空白格", filters1)
+	docs1, found1 := index.Search("我们之间留了太多空白格 b>10")
 	assert.True(t, found1)
 	expected1 := []Doc{{DocID: 9}, {DocID: 23}, {DocID: 31}}
 	assert.EqualValues(t, expected1, docs1)
-	filters2 := []Filter{
-		{Field: "b", Value: uint64(50), Ftype: GREATER},
-	}
-	_, found2 := index.Search("我们之间留了太多空白格", filters2)
+	_, found2 := index.Search("我们之间留了太多空白格 b>50")
 	assert.False(t, found2)
 }
