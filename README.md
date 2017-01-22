@@ -1,3 +1,42 @@
 # Violet [![Build Status](https://travis-ci.org/cosmtrek/violet.svg?branch=master)](https://travis-ci.org/cosmtrek/violet)
 
 A simple search engine in go.
+
+## Install
+
+```
+go get -u github.com/cosmtrek/violet
+```
+
+There are two modes for violet, one is for guys who loves terminal like me, the another is running as http server.
+
+### Terminal Mode
+
+```
+violet -path=INDEX_PATH -index=INDEX_NAME -field=INDEX_FIELDS -data=DATA_FILE -query=true -server=false
+```
+
+Then you can search anything you feed in.
+
+### Server Mode
+
+```
+# start server
+violet -path=INDEX_PATH -index=INDEX_NAME -field=INDEX_FIELDS -data=DATA_FILE
+```
+
+After the server is started, open another terminal to make a post request to create index.
+
+```
+# first create a json file post.json
+{
+    "index": "INDEX_NAME",
+    "index_path": "INDEX_PATH",
+    "fields": "INDEX_FIELDS",
+    "datafile": "DATA_FILE"
+}
+# then create index
+curl -XPOST -d @./data/tweets.json "http://localhost:6000/index"
+# try to query
+curl "http://localhost:6000/INDEX_NAME/search?query=TERM"
+```
