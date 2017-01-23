@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/cosmtrek/violet/engine/index"
 	"github.com/cosmtrek/violet/pkg/analyzer"
 	"github.com/cosmtrek/violet/pkg/utils"
@@ -70,6 +71,7 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 		return err
 	}
 	defer fd.Close()
+	log.Infof("load documents from file: %s\n", file)
 	scanner := bufio.NewScanner(fd)
 	scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 	doc := make(map[string]string)
@@ -90,6 +92,7 @@ func (r *Indexer) LoadDocumentsFromFile(index string, file string, fieldType str
 				}
 			}
 			if err = r.Indexes[index].AddDocument(doc); err != nil {
+				log.Errorf("failed to add document %v into indexer, err: %s\n", doc, err.Error())
 				return errors.Wrap(err, "failed to add document into indexer")
 			}
 		}

@@ -1,5 +1,11 @@
 # Violet [![Build Status](https://travis-ci.org/cosmtrek/violet.svg?branch=master)](https://travis-ci.org/cosmtrek/violet)
 
+```
+        __        ___ ___
+\  / | /  \ |    |__   |
+ \/  | \__/ |___ |___  |
+
+```
 A simple search engine in go.
 
 ## Install

@@ -26,17 +26,23 @@ var (
 	handler *api.Handler
 )
 
-func main() {
-	log.Println("violet is pretty!")
-
+func init() {
 	flag.StringVar(&indexPath, "path", "", "path")
 	flag.StringVar(&index, "index", "violet", "a string")
 	flag.StringVar(&fields, "fields", "", "field1-type,field2-type,field3-type")
 	flag.StringVar(&dataFile, "data", "", "path")
-	flag.BoolVar(&query, "query", false, "term;date>10|len>2")
+	flag.BoolVar(&query, "query", false, "query in terminal mode")
 	flag.BoolVar(&serverMode, "server", true, "server mode")
 	flag.StringVar(&serverPort, "port", "6000", "server port")
+}
+
+func main() {
 	flag.Parse()
+	log.Println(`
+        __        ___ ___
+\  / | /  \ |    |__   |
+ \/  | \__/ |___ |___  |
+`)
 
 	var err error
 	handler = new(api.Handler)
@@ -85,7 +91,6 @@ func main() {
 		log.Errorln(err)
 		os.Exit(1)
 	}
-	log.Println("load data from file successfully!")
 
 	if query {
 		input := bufio.NewScanner(os.Stdin)

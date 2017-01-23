@@ -3,6 +3,7 @@ package index
 import (
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/cosmtrek/violet/pkg/analyzer"
 	"github.com/cosmtrek/violet/pkg/utils"
 	"github.com/kurrik/json"
@@ -31,17 +32,21 @@ func NewField(name string, ftype uint64, path string, segmenter analyzer.Analyze
 	if utils.FileExists(metafile) {
 		meta, err := utils.ReadJSON(metafile)
 		if err != nil {
+			log.Errorf("failed to read json file %s, err: %s\n", metafile, err.Error())
 			return nil, errors.Wrap(err, "failed to read json file")
 		}
 		if err = json.Unmarshal(meta, field); err != nil {
+			log.Errorf("failed to unmarshal meta %v into field %v, err: %s\n", meta, field, err.Error())
 			return nil, errors.Wrap(err, "failed to unmarshal meta into field")
 		}
 	}
 	if field.source, err = NewSource(path, name, ftype); err != nil {
+		log.Errorf("failed to create source file, err: %s\n", err.Error())
 		return nil, errors.Wrap(err, "failed to create source file")
 	}
 	if ftype == TString || ftype == TStore {
 		if field.invert, err = NewInvert(path, name, ftype, segmenter); err != nil {
+			log.Errorf("failed to create invert file, err: %s\n", err.Error())
 			return nil, errors.Wrap(err, "failed to create invert file")
 		}
 	}
