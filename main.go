@@ -38,7 +38,7 @@ func init() {
 
 func main() {
 	flag.Parse()
-	log.Println(`
+	fmt.Println(`
         __        ___ ___
 \  / | /  \ |    |__   |
  \/  | \__/ |___ |___  |
