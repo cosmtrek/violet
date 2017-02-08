@@ -8,6 +8,7 @@ setup:
 	go get -u github.com/pkg/errors
 	go get -u github.com/kurrik/json
 	go get -u github.com/pressly/chi
+	go get -u github.com/stretchr/testify/assert
 
 check:
 	@echo "1. formating code"
