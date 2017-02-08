@@ -61,3 +61,9 @@ forms:
 3. `word1 -word2` search word1 and excludes word2
 4. `field1:word1 field2:word2` search word1 in field1 and word2 in field2
 5. `word field>10` search word and field(integer) is greater than 10
+
+## Demo
+
+[Tweets Search](https://t.happyhacking.io/)
+
+It searches my tweets stored in `./data/tweets`.

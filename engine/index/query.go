@@ -47,7 +47,7 @@ func NewQuery(index *Index, query string) (*Query, error) {
 	}
 	q := &Query{
 		Index:   index,
-		Content: query,
+		Content: strings.TrimSpace(query),
 	}
 	return q, nil
 }

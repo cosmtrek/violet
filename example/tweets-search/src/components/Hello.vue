@@ -31,6 +31,7 @@ export default {
   methods: {
     search() {
       const searchApi = `https://t.happyhacking.io/violet/search?query=${this.query}`;
+      // const searchApi = `http://localhost:6060/violet/search?query=${this.query}`;
       this.$http.get(searchApi).then((response) => {
         const body = response.body;
         if (body.code === '0') {
