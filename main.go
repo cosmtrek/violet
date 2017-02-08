@@ -33,7 +33,7 @@ func init() {
 	flag.StringVar(&dataFile, "data", "", "path")
 	flag.BoolVar(&query, "query", false, "query in terminal mode")
 	flag.BoolVar(&serverMode, "server", true, "server mode")
-	flag.StringVar(&serverPort, "port", "6000", "server port")
+	flag.StringVar(&serverPort, "port", "6060", "server port")
 }
 
 func main() {

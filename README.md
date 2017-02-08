@@ -28,7 +28,7 @@ Then you can search anything you feed in.
 
 ```
 # start server
-violet -path=INDEX_PATH -index=INDEX_NAME -fields=INDEX_FIELDS -data=DATA_FILE
+violet
 ```
 
 After the server is started, open another terminal to make a post request to create index.
@@ -42,7 +42,7 @@ After the server is started, open another terminal to make a post request to cre
     "datafile": "DATA_FILE"
 }
 # then create index
-curl -XPOST -d @./data/tweets.json "http://localhost:6000/index"
+curl -XPOST -d @./data/tweets.json "http://localhost:6060/index"
 # try to query
 curl "http://localhost:6000/INDEX_NAME/search?query=TERM"
 ```

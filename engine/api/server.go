@@ -34,6 +34,8 @@ type Response struct {
 
 // IndexHandler creates an indexer
 func (h *Handler) IndexHandler(w http.ResponseWriter, r *http.Request) {
+	// Dirty hack
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var request IndexerRequest
 	var err error
 	body, err := ioutil.ReadAll(r.Body)
@@ -83,6 +85,8 @@ func (h *Handler) IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // SearchHandler searches everything via http
 func (h *Handler) SearchHandler(w http.ResponseWriter, r *http.Request) {
+	// Dirty hack
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if h.Indexer == nil {
 		w.WriteHeader(http.StatusOK)
 		w.Write(responseFailed("2", "please create indexer firstly"))
