@@ -12,6 +12,10 @@ A simple search engine in go.
 
 ```
 go get -u github.com/cosmtrek/violet
+
+# dont forget add `violet` environment variable
+# vi ~/.bash_profile
+export violet='$GOPATH/src/github.com/cosmtrek/violet'
 ```
 
 There are two modes for violet, one is for guys who loves terminal like me, the another is running as http server.

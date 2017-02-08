@@ -13,6 +13,6 @@ func main() {
 
   http.Handle("/", http.FileServer(http.Dir(*directory)))
 
-  log.Printf("Serving %s on HTTP port: %s\n", *directory, *port)
+  log.Printf("tweets-search: serving %s on HTTP port: %s\n", *directory, *port)
   log.Fatal(http.ListenAndServe(":"+*port, nil))
 }

@@ -1,0 +1,42 @@
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+h1[data-v-5ccd4a2e], h2[data-v-5ccd4a2e] {
+  font-weight: normal;
+}
+ul[data-v-5ccd4a2e] {
+  list-style-type: none;
+  padding: 0;
+}
+li[data-v-5ccd4a2e] {
+  display: inline-block;
+  margin: 0 10px;
+}
+a[data-v-5ccd4a2e] {
+  color: #42b983;
+}
+.search-box[data-v-5ccd4a2e] {
+  width: 800px;
+  height: 40px;
+  padding: 2px 6px;
+  font-size: 20px;
+}
+.result[data-v-5ccd4a2e] {
+  margin: 60px auto;
+  max-width: 800px;
+}
+.doc[data-v-5ccd4a2e] {
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+.foot[data-v-5ccd4a2e] {
+}
+
+/*# sourceMappingURL=app.8863f5b97d82dad52912d9c4a66623c7.css.map*/
