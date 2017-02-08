@@ -23,3 +23,6 @@ _testmain.go
 *.out
 
 data/violet/
+
+*.dev
+logs
